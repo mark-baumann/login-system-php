@@ -4,23 +4,46 @@
 include ("zugriff.php");
 
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
 	$username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = md5($_POST['password']);
-    $cpassword = md5($_POST['cpassword']);
+	$email = $_POST['email'];
+	$password = md5($_POST['password']);
+	$cpassword = md5($_POST['cpassword']);
 
-    if ($password == $cpassword){
-        $sql = "INSERT INTO users(username, password, email) VALUES ('$username', '$password', '$email')";
-        $result = mysqli_query($db, $sql);
-        if($result) {
-            echo "<script>alert('Login erfolgreich')</script>";
+	if ($password == $cpassword) {
+		$sql = "SELECT * FROM users WHERE email='$email'";
+        $sqlUsername = "SELECT * FROM users WHERE username='$username'";
+        $resultUsername = mysqli_query($db, $sqlUsername);
+		$result = mysqli_query($db, $sql);
+
+
+        if(!$resultUsername->num_rows > 0) {
+            if (!$result->num_rows > 0) {
+                $sql = "INSERT INTO users (username, email, password)
+                        VALUES ('$username', '$email', '$password')";
+                $result = mysqli_query($db, $sql);
+                if ($result) {
+                    echo "<script>alert('Wow! User Registration Completed.')</script>";
+                    $username = "";
+                    $email = "";
+                    $_POST['password'] = "";
+                    $_POST['cpassword'] = "";
+                } else {
+                    echo "<script>alert('Woops! Something Wrong Went.')</script>";
+                }
+            } else {
+                echo "<script>alert('Woops! Email Already Exists.')</script>";
+            }
         }else {
-            echo "<script>alert('Fehler bei der Registrierung')</script>";
+            echo "<script>alert('Woops! Username Already Exists.')</script>";
         }
-    }else {
-        echo "<scipt>alert('Password not match')</script>";
-    }
+
+
+		
+		
+	} else {
+		echo "<script>alert('Password Not Matched.')</script>";
+	}
 }
 
 
@@ -65,5 +88,3 @@ if(isset($_POST['submit'])){
 	</div>
 </body>
 </html>
-
-
