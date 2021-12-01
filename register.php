@@ -4,7 +4,24 @@
 include ("zugriff.php");
 
 
+if(isset($_POST['submit'])){
+	$username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = md5($_POST['password']);
+    $cpassword = md5($_POST['cpassword']);
 
+    if ($password == $cpassword){
+        $sql = "INSERT INTO users(username, password, email) VALUES ('$username', '$password', '$email')";
+        $result = mysqli_query($db, $sql);
+        if($result) {
+            echo "<script>alert('Login erfolgreich')</script>";
+        }else {
+            echo "<script>alert('Fehler bei der Registrierung')</script>";
+        }
+    }else {
+        echo "<scipt>alert('Password not match')</script>";
+    }
+}
 
 
 
@@ -22,7 +39,7 @@ include ("zugriff.php");
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 
-	<title>Register Form - Pure Coding</title>
+	<title>Register Form</title>
 </head>
 <body>
 	<div class="container">
