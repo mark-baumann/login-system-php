@@ -3,6 +3,15 @@
 
 include ("zugriff.php");
 
+error_reporting(0);
+
+session_start();
+
+/*
+if(isset($_SESSION['username'])) {
+    header("Location: home.php");
+}
+*/
 
 if (isset($_POST['submit'])) {
 	$username = $_POST['username'];
@@ -24,6 +33,8 @@ if (isset($_POST['submit'])) {
                 $result = mysqli_query($db, $sql);
                 if ($result) {
                     echo "<script>alert('Wow! User Registration Completed.')</script>";
+                    $_SESSION['username'] = $username;
+                    header("Location: home.php");
                     $username = "";
                     $email = "";
                     $_POST['password'] = "";
